@@ -5,14 +5,14 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 
 import javax.swing.*;
 
 
 public class Login extends JFrame implements ActionListener {
 	JLabel label1, label2, label3;
-	JTextField textField;
-	JPasswordField passwordField;
+	JTextField textField,passwordField;
 	JButton button1, button2, button3;
 	Login(){
 		super("Bank Manegement System");
@@ -100,26 +100,35 @@ public class Login extends JFrame implements ActionListener {
 		setVisible(true);
 	}
 	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-	try {
-		if(e.getSource()==button1) {
-			
-		}else if(e.getSource()==button2) {
-			textField.setText("");
-			passwordField.setText("");
-			
-		}else if (e.getSource()==button3) {
-			
-		}
-		
-	}catch(Exception E) {
-		E.printStackTrace();
-	}	
-	
-	
-	
-	}
+	 @Override
+	    public void actionPerformed(ActionEvent e) {
+	        try{
+	            if (e.getSource()==button1){
+	                Verbindung c = new Verbindung();
+	                String cardno = textField.getText();
+	                String pin = passwordField.getText();
+	                String q = "select * from login where card_number = '"+cardno+"' and  pin = '"+pin+"'";
+	                ResultSet resultSet = c.statement.executeQuery(q);
+	                if (resultSet.next()){
+	                    setVisible(false);
+	                    new main_Class(pin);
+	                }else {
+	                    JOptionPane.showMessageDialog(null,"Incorrect Card Number or PIN");
+	                }
+
+
+	            }else if (e.getSource() == button2){
+	                textField.setText("");
+	                passwordField.setText("");
+	            }else if (e.getSource() == button3){
+	                new Registrieren();
+	                setVisible(false);
+	            }
+	        }catch (Exception E){
+	            E.printStackTrace();
+	        }
+
+	    }
  
 	public static void main(String[] args) {
 		new Login();
